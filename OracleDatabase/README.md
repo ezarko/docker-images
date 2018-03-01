@@ -1,5 +1,4 @@
-Oracle Database on Docker
-===============
+# Oracle Database on Docker
 Sample Docker build files to facilitate installation, configuration, and environment setup for DevOps users. For more information about Oracle Database please see the [Oracle Database Online Documentation](http://docs.oracle.com/database/121/index.htm).
 
 ## How to build and run
@@ -15,7 +14,7 @@ The `buildDockerImage.sh` script is just a utility shell script that performs MD
 ### Building Oracle Database Docker Install Images
 **IMPORTANT:** You will have to provide the installation binaries of Oracle Database and put them into the `dockerfiles/<version>` folder. You only need to provide the binaries for the edition you are going to install. The binaries can be downloaded from the [Oracle Technology Network](http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html). You also have to make sure to have internet connectivity for yum. Note that you must not uncompress the binaries. The script will handle that for you and fail if you uncompress them manually!
 
-Before you build the image make sure that you have provided the installation binaries and put them into the right folder. Once you have chosen which edition and version you want to build an image of, go into the **dockerfiles** folder and run the **buildDockerImage.sh** script as root or with `sudo` privileges:
+Before you build the image make sure that you have provided the installation binaries and put them into the right folder. Once you have chosen which edition and version you want to build an image of, go into the **dockerfiles** folder and run the **buildDockerImage.sh** script:
 
     [oracle@localhost dockerfiles]$ ./buildDockerImage.sh -h
     
@@ -171,15 +170,18 @@ After the database is setup and/or started the scripts in those folders will be 
 SQL scripts will be executed as sysdba, shell scripts will be executed as the current user. To ensure proper order it is
 recommended to prefix your scripts with a number. For example `01_users.sql`, `02_permissions.sql`, etc.
 
-**Note:** The startup scripts will also be executed after the first time database setup is complete.
+**Note:** The startup scripts will also be executed after the first time database setup is complete.  
+**Note:** Use `/u01/app/oracle/scripts/` instead of `/opt/oracle/scripts/` for Express Edition.  
 
 The example below mounts the local directory myScripts to `/opt/oracle/myScripts` which is then searched for custom startup scripts:
 
     docker run --name oracle-ee -p 1521:1521 -v /home/oracle/myScripts:/opt/oracle/scripts/startup -v /home/oracle/oradata:/opt/oracle/oradata oracle/database:12.2.0.1-ee
     
-
 ## Known issues
 * The [`overlay` storage driver](https://docs.docker.com/engine/userguide/storagedriver/selectadriver/) on CentOS has proven to run into Docker bug #25409. We recommend using `btrfs` or `overlay2` instead. For more details see issue #317.
+
+## Frequently asked questions
+Please see [FAQ.md](./FAQ.md) for frequently asked questions.
 
 ## Support
 Oracle Database in single instance configuration is supported for Oracle Linux 7 and Red Hat Enterprise Linux (RHEL) 7.
